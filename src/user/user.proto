@@ -1,0 +1,92 @@
+syntax = "proto3";
+
+package user_service;
+
+option csharp_namespace = "UsersService.Grpc";
+
+service UserService {
+  rpc GetAllUsers(.user_service.GetAllUsersRequest)
+  returns (.user_service.GetAllUsersResponse);
+  rpc GetUserById(.user_service.GetUserByIdRequest)
+  returns (.user_service.GetUserByIdResponse);
+  rpc CreateUser(.user_service.CreateUserRequest)
+  returns (.user_service.CreateUserResponse);
+  rpc DeleteUserById(.user_service.DeleteUserByIdRequest)
+  returns (.user_service.DeleteUserByIdResponse);
+  rpc UpdateUser(.user_service.UpdateUserRequest)
+  returns (.user_service.UpdateUserResponse);
+}
+
+enum Status {
+  STATUS_NONE_UNSPECIFIED = 0;
+  SUCCESS = 1;
+  DENIED = 2;
+}
+
+enum Role {
+  ROLE_NONE_UNSPECIFIED = 0;
+  SUPER_ADMIN = 1;
+  ADMIN = 2;
+  USER = 3;
+}
+
+message User {
+  string id = 1;
+  string name = 2;
+  string email = 3;
+  string password = 4;
+  Role role = 5;
+  int32 points = 6;
+}
+
+message GetAllUsersRequest {}
+
+message GetAllUsersResponse {
+  repeated User users = 1;
+  Status status = 2;
+  string message = 3;
+}
+
+message GetUserByIdRequest {
+  string id = 1;
+}
+
+message GetUserByIdResponse {
+  User user = 1;
+  Status status = 2;
+  string message = 3;
+}
+
+message CreateUserRequest {
+  string name = 1;
+  string email = 2;
+  string password = 3;
+}
+
+message CreateUserResponse {
+  Status status = 1;
+  string message = 2;
+}
+
+message DeleteUserByIdRequest {
+  string id = 1;
+}
+
+message DeleteUserByIdResponse {
+  Status status = 1;
+  string message = 2;
+}
+
+message UpdateUserRequest {
+  string id = 1;
+  string name = 2;
+  string email = 3;
+  string password = 4;
+  Role role = 5;
+  int32 points = 6;
+}
+
+message UpdateUserResponse {
+  Status status = 1;
+  string message = 2;
+}
