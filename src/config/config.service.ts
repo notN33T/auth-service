@@ -7,10 +7,10 @@ export class ConfigService {
   constructor() {
     this.envConfig = {};
 
-    this.envConfig.usersService = {
+    this.envConfig.userService = {
       transport: Transport.GRPC,
       options: {
-        package: 'users',
+        package: 'user_service',
         url: process.env.USERS_SERVICE_URL,
         protoPath: join(__dirname, '../../src/user/user.proto'),
       },
