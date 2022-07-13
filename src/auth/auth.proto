@@ -1,0 +1,68 @@
+syntax = "proto3";
+
+package auth_service;
+
+option csharp_namespace = "AuthService.Grpc";
+
+service AuthService {
+  rpc Register (RegisterRequest)
+  returns (RegisterResponse);
+  rpc Login (LoginRequest)
+  returns (LoginResponse);
+  rpc Refresh (RefreshRequest)
+  returns (RefreshResponse);
+  rpc GetIdFromToken (GetIdFromTokenRequest)
+  returns (GetIdFromTokenResponse);
+}
+
+enum Status {
+  STATUS_NONE_UNSPECIFIED = 0;
+  SUCCESS = 1;
+  DENIED = 2;
+}
+
+message RegisterRequest {
+  string email = 1;
+  string name = 2;
+  string password = 3;
+}
+
+message RegisterResponse {
+  string accessToken = 1;
+  string refreshToken = 2;
+  Status status = 3;
+  string message = 4;
+}
+
+message LoginRequest {
+  string name = 1;
+  string password = 2;
+}
+
+message LoginResponse {
+  string accessToken = 1;
+  string refreshToken = 2;
+  Status status = 3;
+  string message = 4;
+}
+
+message RefreshRequest {
+  string refreshToken = 1;
+}
+
+message RefreshResponse {
+  string accessToken = 1;
+  string refreshToken = 2;
+  Status status = 3;
+  string message = 4;
+}
+
+message GetIdFromTokenRequest {
+  string token = 1;
+}
+
+message GetIdFromTokenResponse {
+  string id = 1;
+  Status status = 2;
+  string messsage = 3;
+}
