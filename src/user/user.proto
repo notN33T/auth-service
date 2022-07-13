@@ -15,6 +15,8 @@ service UserService {
   returns (.user_service.DeleteUserByIdResponse);
   rpc UpdateUser(.user_service.UpdateUserRequest)
   returns (.user_service.UpdateUserResponse);
+  rpc GetUserByEmail(.user_service.GetUserByEmailRequest)
+  returns (.user_service.GetUserByEmailResponse);
 }
 
 enum Status {
@@ -89,4 +91,14 @@ message UpdateUserRequest {
 message UpdateUserResponse {
   Status status = 1;
   string message = 2;
+}
+
+message GetUserByEmailRequest {
+  string email = 1;
+}
+
+message GetUserByEmailResponse {
+  User user = 1;
+  Status status = 2;
+  string message = 3;
 }
