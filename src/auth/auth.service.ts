@@ -97,4 +97,46 @@ export class AuthService {
 
     return { accessToken, refreshToken, status: Status.SUCCESS };
   }
+
+  async refresh(refreshDto: RefreshDto): Promise<any> {
+    const { id, refreshToken } = refreshDto;
+
+    const userTokenById = await this.cacheManager.get(id);
+    if (!userTokenById)
+      return { message: 'User not logged in', status: Status.DENIED };
+
+    if (refreshToken !== userTokenById) {
+      await this.cacheManager.del(id);
+      return {
+        message: 'Token not belongs to current user',
+        status: Status.DENIED,
+      };
+    }
+
+    const userByIdResponse = await lastValueFrom(
+      this.grpcService.GetUserById({ id }),
+    );
+
+    const statusFromResponse: Status = userByIdResponse.status;
+    const isCreatedStatus = Status[statusFromResponse];
+
+    if (isCreatedStatus === Status[2]) return userByIdResponse;
+
+    const userFromResponse: User = userByIdResponse.user;
+
+    const { name, email } = userFromResponse;
+
+    const [accessToken, newRefreshToken] = await Promise.all([
+      this.jwtService.generateAccessToken({ id, name, email }),
+      this.jwtService.generateRefreshToken({ id, name, email }),
+    ]);
+
+    await this.cacheManager.set(id, newRefreshToken);
+
+    return {
+      accessToken,
+      refreshToken: newRefreshToken,
+      status: Status.SUCCESS,
+    };
+  }
 }
