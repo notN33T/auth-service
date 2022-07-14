@@ -28,7 +28,7 @@ export class JwtService {
       },
       (err, user) => {
         if (err || !user)
-          return { message: 'Invalid token', status: Status.DENIED };
+          return { message: err.message, status: Status.DENIED };
         return user;
       },
     );
@@ -41,8 +41,7 @@ export class JwtService {
     if (!bearer) return { message: 'Not authenticated', status: Status.DENIED };
     bearer = bearer.replace(/Bearer /g, '');
 
-    const payload = await this.verifyToken(bearer, secret);
-    if (!payload) return false;
-    if (typeof payload !== 'string') return payload.id;
+    const verifiedToken = await this.verifyToken(bearer, secret);
+    return verifiedToken;
   }
 }

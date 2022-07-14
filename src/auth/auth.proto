@@ -65,5 +65,5 @@ message GetIdFromTokenRequest {
 message GetIdFromTokenResponse {
   string id = 1;
   Status status = 2;
-  string messsage = 3;
+  string message = 3;
 }
