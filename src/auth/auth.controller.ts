@@ -6,6 +6,7 @@ import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { RefreshDto } from './dto/refresh.dto';
+import { GetIdFromTokenDto } from './dto/getIdFromToken.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -24,5 +25,10 @@ export class AuthController {
   @GrpcMethod('AuthService', 'Refresh')
   async refresh(refreshDto: RefreshDto): Promise<any> {
     return this.authService.refresh(refreshDto);
+  }
+
+  @GrpcMethod('AuthService', 'GetIdFromToken')
+  async getIdFromToken(getIdFromTokenDto: GetIdFromTokenDto): Promise<any> {
+    return this.authService.getIdFromToken(getIdFromTokenDto);
   }
 }

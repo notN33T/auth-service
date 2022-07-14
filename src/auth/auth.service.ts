@@ -14,6 +14,7 @@ import { Status } from './enums/status.enum';
 import { LoginDto } from './dto/login.dto';
 import { User } from './dto/user.dto';
 import { RefreshDto } from './dto/refresh.dto';
+import { GetIdFromTokenDto } from './dto/getIdFromToken.dto';
 
 @Injectable()
 export class AuthService {
@@ -138,5 +139,15 @@ export class AuthService {
       refreshToken: newRefreshToken,
       status: Status.SUCCESS,
     };
+  }
+
+  async getIdFromToken(getIdFromTokenDto: GetIdFromTokenDto): Promise<any> {
+    const { token } = getIdFromTokenDto;
+
+    const getIdResult = await this.jwtService.getIdFromToken(token);
+    console.log({ ...getIdResult });
+    if (getIdResult?.message) return { ...getIdResult };
+
+    return { getIdResult, status: Status.SUCCESS };
   }
 }
