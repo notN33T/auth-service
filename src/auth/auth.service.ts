@@ -13,6 +13,7 @@ import { UserServiceCreateResponseDto } from './dto/userServiceRegisterResponse.
 import { Status } from './enums/status.enum';
 import { LoginDto } from './dto/login.dto';
 import { User } from './dto/user.dto';
+import { RefreshDto } from './dto/refresh.dto';
 
 @Injectable()
 export class AuthService {
@@ -53,7 +54,6 @@ export class AuthService {
       this.jwtService.generateRefreshToken({ id: createdUser.id, name, email }),
     ]);
 
-    await this.cacheManager.del(userId);
     await this.cacheManager.set(userId, refreshToken);
 
     return { ...isUserCreated, accessToken, refreshToken };
@@ -93,7 +93,6 @@ export class AuthService {
       }),
     ]);
 
-    await this.cacheManager.del(userId);
     await this.cacheManager.set(userId, refreshToken);
 
     return { accessToken, refreshToken, status: Status.SUCCESS };
