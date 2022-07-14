@@ -1,5 +1,6 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, CACHE_MANAGER } from '@nestjs/common';
 import { lastValueFrom } from 'rxjs';
+import { Cache } from 'cache-manager';
 
 import { CryptService } from '../services/crypto/crypt.service';
 import { JwtService } from '../services/jwt/jwt.service';
@@ -19,6 +20,7 @@ export class AuthService {
     private readonly cryptService: CryptService,
     private readonly jwtService: JwtService,
     @Inject('USER_SERVICE') private readonly userService: ClientGrpc,
+    @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
   ) {}
 
   // Connection to user microservice
@@ -39,6 +41,8 @@ export class AuthService {
       this.grpcService.GetUserByEmail({ email }),
     );
 
+    const userId = createdUser.id;
+
     const statusFromResponse: Status = isUserCreated.status;
     const isCreatedStatus = Status[statusFromResponse];
 
@@ -48,6 +52,9 @@ export class AuthService {
       this.jwtService.generateAccessToken({ id: createdUser.id, name, email }),
       this.jwtService.generateRefreshToken({ id: createdUser.id, name, email }),
     ]);
+
+    await this.cacheManager.del(userId);
+    await this.cacheManager.set(userId, refreshToken);
 
     return { ...isUserCreated, accessToken, refreshToken };
   }
@@ -63,6 +70,7 @@ export class AuthService {
     if (isUserFoundStatus === Status[2]) return { ...userByEmailResponse };
 
     const user: User = userByEmailResponse.user;
+    const userId = user.id;
 
     const isPasswordMatches = await this.cryptService.compare(
       password,
@@ -84,6 +92,9 @@ export class AuthService {
         email,
       }),
     ]);
+
+    await this.cacheManager.del(userId);
+    await this.cacheManager.set(userId, refreshToken);
 
     return { accessToken, refreshToken, status: Status.SUCCESS };
   }
