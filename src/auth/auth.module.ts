@@ -1,4 +1,5 @@
-import { Module } from '@nestjs/common';
+import { Module, CacheModule } from '@nestjs/common';
+import * as redisStore from 'cache-manager-redis-store';
 
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
@@ -8,7 +9,14 @@ import { ConfigService } from '../config/config.service';
 import { ClientProxyFactory } from '@nestjs/microservices';
 
 @Module({
-  imports: [],
+  imports: [
+    CacheModule.register({
+      store: redisStore,
+      host: process.env.REDIS_AUTH_HOST,
+      port: process.env.REDIS_AUTH_PORT,
+      ttl: Number(process.env.REDIS_AUTH_TTL),
+    }),
+  ],
   providers: [
     JwtService,
     CryptService,

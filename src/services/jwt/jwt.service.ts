@@ -1,4 +1,5 @@
 import * as jwt from 'jsonwebtoken';
+import { Status } from '../../auth/enums/status.enum';
 
 export class JwtService {
   async generateAccessToken(payload: object) {
@@ -26,7 +27,8 @@ export class JwtService {
         clockTimestamp: new Date().getTime() / 1000,
       },
       (err, user) => {
-        if (err || !user) return { message: 'Invalid token' };
+        if (err || !user)
+          return { message: 'Invalid token', status: Status.DENIED };
         return user;
       },
     );
@@ -36,7 +38,7 @@ export class JwtService {
     bearer: string,
     secret: string = process.env.JWT_SECRET,
   ) {
-    if (!bearer) return { message: 'Not authenticated' };
+    if (!bearer) return { message: 'Not authenticated', status: Status.DENIED };
     bearer = bearer.replace(/Bearer /g, '');
 
     const payload = await this.verifyToken(bearer, secret);
