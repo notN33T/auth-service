@@ -2,9 +2,12 @@ import { Observable } from 'rxjs';
 import { Role } from '../auth/enums/role.enum';
 
 export interface IGrpcService {
-  GetUserById(BodyForForgot: IGetUserByIdRequest): Observable<any>;
-  CreateUser(BodyForReset: ICreateUserRequest): Observable<any>;
-  UpdateUser(BodyForFindUser: IUpdateUserRequest): Observable<any>;
+  GetUserById(GetUserByIdRequest: IGetUserByIdRequest): Observable<any>;
+  CreateUser(CreateUserRequest: ICreateUserRequest): Observable<any>;
+  UpdateUser(UpdateUserRequest: IUpdateUserRequest): Observable<any>;
+  GetUserByEmail(
+    GetUserByEmailRequest: IGetUserByEmailRequest,
+  ): Observable<any>;
 }
 
 export interface IGetUserByIdRequest {
@@ -24,4 +27,8 @@ export interface IUpdateUserRequest {
   role?: Role;
   password?: string;
   points?: number;
+}
+
+export interface IGetUserByEmailRequest {
+  email: string;
 }
