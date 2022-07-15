@@ -1,73 +1,39 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="320" alt="Nest Logo" /></a>
-</p>
+# BGH auth-service
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+This service implements operations with authentication such as register, login, refresh and also getIdFromToken
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+To run this project you'll need:
 
-## Description
+* Install Node, npm
+* Upload code of this repository
+* Run console command ```npm install``` from the root of repository
+* Run console command ```npm run start:dev``` for running application in dev, or ```npm run start:prod``` to run in production mode (without updates when code changed)
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+### Technologies used in this project
 
-## Installation
+* [Nest.js](https://docs.nestjs.com) for microservice
+* [JWT](https://jwt.io) as method of authentication
+* [GRPC](https://docs.nestjs.com/microservices/grpc) as transporter
+* [Redis](https://docs.nestjs.com/techniques/caching) as cache-manager
 
-```bash
-$ npm install
-```
+## GRPC methods
 
-## Running the app
+1. Register
 
-```bash
-# development
-$ npm run start
+* Body of request should contain email, name, password
+* Body of response will contain refreshToken, accessToken, message and status (SUCCESS or DENIED)
 
-# watch mode
-$ npm run start:dev
+2. Login
 
-# production mode
-$ npm run start:prod
-```
+* Body of request should contain email, password
+* Body of response will contain refreshToken, accessToken, message and status (SUCCESS or DENIED)
 
-## Test
+3. Refresh
 
-```bash
-# unit tests
-$ npm run test
+* Body of request should contain refreshToken, id
+* Body of response will contain refreshToken, accessToken, message and status (SUCCESS or DENIED)
 
-# e2e tests
-$ npm run test:e2e
+4. GetIdFromToken
 
-# test coverage
-$ npm run test:cov
-```
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
+* Body of request should contain token
+* Body of response will contain id, status (SUCCESS or DENIED) and message
